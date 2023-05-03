@@ -2,36 +2,28 @@ import React from 'react'
 import CMContainer from '../common/CMContainer'
 import styled from 'styled-components'
 import { RECENT_KEY } from 'src/utils/const/keyword';
+import CMNoticeLIne from '../common/CMNoticeLIne';
 
-const KeywordRecent = () => {
+const KeywordRecent = ({setIsClick}:{setIsClick:React.Dispatch<React.SetStateAction<boolean>>}) => {
   const recentDatas = JSON.parse(localStorage.getItem(RECENT_KEY)||"[]");
-  console.log(recentDatas)
   return (
     <CMContainer>
       <S.SearchWrap>
-        <RecentLine>
-          최근 검색어
-        </RecentLine>
+        <CMNoticeLIne>최근 검색어</CMNoticeLIne>
         {
           recentDatas.length>0 ? recentDatas.map((recent:string)=>{
             return(
-              <S.SearchItem>
+              <S.SearchItem onClick={()=>setIsClick(prev=>!prev)}>
                 {recent}
               </S.SearchItem>
             )
           }):
-          <S.SearchItem>최근 검색어가 없습니다.</S.SearchItem>
+          <CMNoticeLIne color={"#A7AFB7"}>최근 검색어가 없습니다.</CMNoticeLIne>
         }
       </S.SearchWrap>
     </CMContainer>
   )
 }
-
-const RecentLine = styled.div`
-  font-size:12px;
-  padding:10px 20px;
-  font-weight:500;
-`
 
 const S = {
   SearchWrap: styled.ul`
@@ -43,7 +35,7 @@ const S = {
   &:hover{
     background-color: rgba(0,0,0,0.1);
   }
-`
+  `,
 }
 
 export default KeywordRecent

@@ -4,17 +4,18 @@ import {AiOutlineSearch} from 'react-icons/ai';
 import {MdCancel} from 'react-icons/md';
 import useOutsideClick from 'src/hooks/useOutsideClick';
 import { RECENT_KEY } from 'src/utils/const/keyword';
+import { keyboards } from 'src/utils/const/keyboard';
 
 type Props ={
   keyword: string | undefined
   isClick: boolean
   setKeyword : React.Dispatch<React.SetStateAction<string>>
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>
+  refetch: (keyword: string) => Promise<void>
 }
 
-const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick }: Props) => {
+const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick,refetch }: Props) => {
 
-  const keywordInputRef = useRef<HTMLInputElement>(null);
 
   const onCancleBtn = (e:React.MouseEvent)=>{
     e.stopPropagation();
@@ -25,11 +26,23 @@ const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick }: Props) => {
     if(keyword) localStorage.setItem(RECENT_KEY,keyword);
   }
 
-  useOutsideClick(keywordInputRef,()=>setIsClick(false))
+  const handleKeyPress = (e:React.KeyboardEvent)=>{
+    if(e.key === keyboards.ESCAPE) {
+      setKeyword("");
+    };
+    if(e.key === keyboards.ENTER){
+      if(keyword) {
+        const recents = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
+        const jsonRecents = JSON.stringify([...recents,keyword])
+        refetch(keyword)
+        localStorage.setItem(RECENT_KEY,jsonRecents);
+      }
+    }
+  }
 
   return (
     <S.Box isClick={isClick}>
-      <S.Line ref={keywordInputRef} onClick={()=>setIsClick(true)}>
+      <S.Line onClick={()=>setIsClick(true)}>
         {
           (!isClick && !keyword) &&
           <NoticeWrap>
@@ -38,7 +51,7 @@ const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick }: Props) => {
           </NoticeWrap>
         }
         <S.SearchInputWrap>
-          <S.SearchInput value={keyword} onChange={(e)=>setKeyword(e.target.value)}/>
+          <S.SearchInput onKeyDown={handleKeyPress} value={keyword} onChange={(e)=>setKeyword(e.target.value)}/>
           <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color='#A7AFB7' />
         </S.SearchInputWrap>
       </S.Line>

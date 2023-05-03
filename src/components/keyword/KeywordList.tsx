@@ -1,6 +1,8 @@
 import { IKeyword} from 'src/types/keyword'
 import styled from 'styled-components'
 import CMContainer from 'src/components/common/CMContainer'
+import { useRef, useState } from 'react'
+import CMNoticeLIne from '../common/CMNoticeLIne'
 
 type Props ={
   keyword:string
@@ -8,45 +10,32 @@ type Props ={
 }
 
 const KeywordList = ({keyword,keywordInfo}:Props) => {
+
+  const autoRef = useRef<HTMLUListElement>(null);
+  const [index,setIndex] = useState<number>(-1);
   
   return (
     <CMContainer>
-        <KeywordLine>
+        <S.KeywordLine>
           {keyword}
-        </KeywordLine>
-        <S.SearchWrap>
+        </S.KeywordLine>
+        <S.SearchWrap ref={autoRef}>
           {
             keywordInfo.length > 0 ? 
             <>
-              <RecommnedLine>추천 검색어</RecommnedLine>
+              <CMNoticeLIne>추천 검색어</CMNoticeLIne>
               {keywordInfo.map((keywordItem) => (
                 <S.SearchItem>{keywordItem.name}</S.SearchItem>
               ))}
             </>
             :
-            <S.SearchItem>
-              검색어가 없습니다.
-            </S.SearchItem>
+            <CMNoticeLIne>검색어가 없습니다.</CMNoticeLIne>
           }
         </S.SearchWrap>
     </CMContainer>
   )
 }
 
-const KeywordLine = styled.div`
-  margin-top:20px;
-  padding:10px 20px;
-  cursor: pointer;
-    &:hover{
-      background-color: rgba(0,0,0,0.1);
-  }
-`
-
-const RecommnedLine = styled.div`
-  font-size:12px;
-  padding:10px 20px;
-  font-weight:500;
-`
 const S = {
   SearchWrap: styled.ul`
   `,
@@ -57,7 +46,15 @@ const S = {
     &:hover{
       background-color: rgba(0,0,0,0.1);
     }
-  `
+  `,
+  KeywordLine: styled.div`
+    margin-top:10px;
+    padding:10px 20px;
+    cursor: pointer;
+    &:hover{
+      background-color: rgba(0,0,0,0.1);
+    }
+  `,
 }
 
 export default KeywordList
