@@ -1,43 +1,62 @@
 import { IKeyword} from 'src/types/keyword'
 import styled from 'styled-components'
+import CMContainer from 'src/components/common/CMContainer'
 
 type Props ={
+  keyword:string
   keywordInfo: Array<IKeyword>
 }
 
-//TODO: 규격만짜놨음 api연동해야함
-const KeywordList = ({keywordInfo}:Props) => {
-
+const KeywordList = ({keyword,keywordInfo}:Props) => {
+  
   return (
-    <S.Container>
-      <S.SearchWrap>
-        {
-          keywordInfo && keywordInfo.map(keyword=>{
-            return(
-              <S.SearchItem>
-                {keyword.name}
-              </S.SearchItem>
-            )
-          })
-        }
-      </S.SearchWrap>
-    </S.Container>
+    <CMContainer>
+        <KeywordLine>
+          {keyword}
+        </KeywordLine>
+        <S.SearchWrap>
+          {
+            keywordInfo.length > 0 ? 
+            <>
+              <RecommnedLine>추천 검색어</RecommnedLine>
+              {keywordInfo.map((keywordItem) => (
+                <S.SearchItem>{keywordItem.name}</S.SearchItem>
+              ))}
+            </>
+            :
+            <S.SearchItem>
+              검색어가 없습니다.
+            </S.SearchItem>
+          }
+        </S.SearchWrap>
+    </CMContainer>
   )
 }
 
+const KeywordLine = styled.div`
+  margin-top:20px;
+  padding:10px 20px;
+  cursor: pointer;
+    &:hover{
+      background-color: rgba(0,0,0,0.1);
+  }
+`
+
+const RecommnedLine = styled.div`
+  font-size:12px;
+  padding:10px 20px;
+  font-weight:500;
+`
 const S = {
-  Container: styled.div`
-    padding: 15px 10px;
-    background-color: #fff;
-    width:100%;
-    position:absolute;
-    bottom:0px;
-  `,
   SearchWrap: styled.ul`
-    
   `,
   SearchItem: styled.li`
-    
+    padding:10px 20px;
+    font-weight:bold;
+    cursor: pointer;
+    &:hover{
+      background-color: rgba(0,0,0,0.1);
+    }
   `
 }
 

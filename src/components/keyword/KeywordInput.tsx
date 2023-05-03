@@ -3,21 +3,26 @@ import styled from 'styled-components'
 import {AiOutlineSearch} from 'react-icons/ai';
 import {MdCancel} from 'react-icons/md';
 import useOutsideClick from 'src/hooks/useOutsideClick';
+import { RECENT_KEY } from 'src/utils/const/keyword';
 
 type Props ={
   keyword: string | undefined
+  isClick: boolean
   setKeyword : React.Dispatch<React.SetStateAction<string>>
+  setIsClick: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const KeywordInput = ({ keyword, setKeyword }: Props) => {
+const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick }: Props) => {
 
   const keywordInputRef = useRef<HTMLInputElement>(null);
-  const [isClick,setIsClick] = useState(false);
-
 
   const onCancleBtn = (e:React.MouseEvent)=>{
     e.stopPropagation();
     setKeyword("");
+  }
+
+  const handleSearchKeyword = ()=>{
+    if(keyword) localStorage.setItem(RECENT_KEY,keyword);
   }
 
   useOutsideClick(keywordInputRef,()=>setIsClick(false))
@@ -37,7 +42,7 @@ const KeywordInput = ({ keyword, setKeyword }: Props) => {
           <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color='#A7AFB7' />
         </S.SearchInputWrap>
       </S.Line>
-      <S.SubmItBtn>
+      <S.SubmItBtn onClick={handleSearchKeyword}>
         <S.SearchIcon color='#fff' />
       </S.SubmItBtn>
     </S.Box>

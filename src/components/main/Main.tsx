@@ -40,7 +40,6 @@ const S = {
   KeywordWrap: styled.div`
     width:490px;
     margin:0 auto;
-    position:relative;
   `
 }
 
