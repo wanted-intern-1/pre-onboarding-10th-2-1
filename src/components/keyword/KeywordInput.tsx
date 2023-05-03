@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import {AiOutlineSearch} from 'react-icons/ai';
 import {MdCancel} from 'react-icons/md';
 import useOutsideClick from 'src/hooks/useOutsideClick';
-import { RECENT_KEY } from 'src/utils/const/keyword';
+import { MAX_LEN, RECENT_KEY } from 'src/utils/const/keyword';
 import { keyboards } from 'src/utils/const/keyboard';
 
 type Props ={
@@ -12,9 +12,11 @@ type Props ={
   setKeyword : React.Dispatch<React.SetStateAction<string>>
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>
   refetch: (keyword: string) => Promise<void>
+  setIndex: React.Dispatch<React.SetStateAction<number>>
+  index:number
 }
 
-const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick,refetch }: Props) => {
+const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick,refetch,setIndex,index }: Props) => {
 
 
   const onCancleBtn = (e:React.MouseEvent)=>{
@@ -37,6 +39,14 @@ const KeywordInput = ({ keyword, setKeyword, isClick, setIsClick,refetch }: Prop
         refetch(keyword)
         localStorage.setItem(RECENT_KEY,jsonRecents);
       }
+    }
+    if(e.key === keyboards.DOWN){
+      if(MAX_LEN === index+1) return
+      setIndex(prev=>prev + 1);
+    }
+    if(e.key ===  keyboards.UP){
+      if(index===0)return
+      setIndex(prev=>prev - 1);
     }
   }
 
@@ -83,6 +93,7 @@ const S = {
     background-color: #fff;
     width:100%;
     border-color: ${({isClick})=>isClick ? "rgb(25, 118, 210)" :"#fff"} ;
+    position:relative;
   `,
   Line: styled.div`
     width:100%;

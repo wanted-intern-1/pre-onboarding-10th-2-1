@@ -9,12 +9,12 @@ const CMContainer = ({children}:{children:ReactNode}) => {
 
 const Container =  styled.div`
 background-color: #fff;
-width:100%;
+width:520px;
 position:absolute;
 top:80px;
 left:10px;
-max-height: 290px;
-overflow:auto;
+max-height: 320px;
+overflow:hidden;
 border-radius:15px;
 padding: 10px 0px;
 `

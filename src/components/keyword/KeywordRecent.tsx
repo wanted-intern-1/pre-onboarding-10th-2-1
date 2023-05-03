@@ -5,6 +5,7 @@ import { RECENT_KEY } from 'src/utils/const/keyword';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 
 const KeywordRecent = ({setIsClick}:{setIsClick:React.Dispatch<React.SetStateAction<boolean>>}) => {
+
   const recentDatas = JSON.parse(localStorage.getItem(RECENT_KEY)||"[]");
   return (
     <CMContainer>
