@@ -1,21 +1,21 @@
-import React from 'react'
-import { ISearch } from 'src/types/search'
+import { IKeyword} from 'src/types/keyword'
 import styled from 'styled-components'
 
 type Props ={
-  searchInfo: Array<ISearch>
+  keywordInfo: Array<IKeyword>
 }
 
 //TODO: 규격만짜놨음 api연동해야함
-const SearchList = ({searchInfo}:Props) => {
+const KeywordList = ({keywordInfo}:Props) => {
+
   return (
     <S.Container>
       <S.SearchWrap>
         {
-          searchInfo && searchInfo.map(search=>{
+          keywordInfo && keywordInfo.map(keyword=>{
             return(
               <S.SearchItem>
-                {search.name}
+                {keyword.name}
               </S.SearchItem>
             )
           })
@@ -38,4 +38,4 @@ const S = {
   `
 }
 
-export default SearchList
+export default KeywordList
