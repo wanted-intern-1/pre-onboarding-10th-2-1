@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://www.pre-onboarding-selection-task.shop/';
+const BASE_URL = 'https://api.clinicaltrialskorea.com/api/v1/search-conditions/';
 
-export const client = axios.create({ baseURL: BASE_URL });
+export const client = axios.create();
 
 const isSuccessfulStatus = (status:number) =>
   (status >= 200 && status < 300) || status === 304;
@@ -18,7 +18,7 @@ client.interceptors.request.use(
 client.interceptors.response.use(
   (response) => {
     if (isSuccessfulStatus(response.status)) {
-      return response.data;
+      return response;
     } else {
       const { error, message, statusCode } = response.data;
       return Promise.reject(

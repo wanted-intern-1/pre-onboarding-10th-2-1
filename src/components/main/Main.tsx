@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import KeywordInput from 'src/components/main/KeywordInput'
+import KeywordMain from '../keyword/KeywordMain'
 
 const Main = () => {
+  
   return (
     <S.Container>
       <S.Wrap>
@@ -12,7 +13,9 @@ const Main = () => {
           온라인으로 참여하기
         </S.Title>
       </S.Wrap>
-      <KeywordInput/>
+      <S.KeywordWrap>
+        <KeywordMain/>
+      </S.KeywordWrap>
     </S.Container>
   )
 }
@@ -33,6 +36,11 @@ const S = {
     font-size: 2.125rem;
     font-weight: 700;
     margin-bottom:40px;
+  `,
+  KeywordWrap: styled.div`
+    width:490px;
+    margin:0 auto;
+    position:relative;
   `
 }
 

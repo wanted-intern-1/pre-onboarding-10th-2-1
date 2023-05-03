@@ -29,6 +29,9 @@ const S = {
   Container: styled.div`
     padding: 15px 10px;
     background-color: #fff;
+    width:100%;
+    position:absolute;
+    bottom:0px;
   `,
   SearchWrap: styled.ul`
     
