@@ -1,2 +1,6 @@
-export const RECENT_KEY = 'recentKey';
-export const MAX_LEN = 5;
+export const CSKeyword = {
+  RECENT_KEY: 'recentKey',
+  MAX_LEN: 5,
+  EXPIRE_TIME: 3600000
+}
+

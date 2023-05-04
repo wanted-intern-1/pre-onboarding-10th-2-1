@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
 import useOutsideClick from 'src/hooks/useOutsideClick';
-import { MAX_LEN, RECENT_KEY } from 'src/utils/const/keyword';
+import { CSKeyword } from 'src/utils/const/keyword';
 import { keyboards } from 'src/utils/const/keyboard';
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
   refetch: (keyword: string) => Promise<void>;
   setIndex: React.Dispatch<React.SetStateAction<number>>;
   index: number;
+  keywordsLength: number | undefined;
 };
 
 const KeywordInput = ({
@@ -24,6 +25,7 @@ const KeywordInput = ({
   refetch,
   setIndex,
   index,
+  keywordsLength
 }: Props) => {
   const onCancleBtn = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -31,7 +33,7 @@ const KeywordInput = ({
   };
 
   const handleSearchKeyword = () => {
-    if (keyword) localStorage.setItem(RECENT_KEY, keyword);
+    if (keyword) localStorage.setItem(CSKeyword.RECENT_KEY, keyword);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -40,14 +42,14 @@ const KeywordInput = ({
     }
     if (e.key === keyboards.ENTER) {
       if (keyword) {
-        const recents = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+        const recents = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
         const jsonRecents = JSON.stringify([...recents, keyword]);
         refetch(keyword);
-        localStorage.setItem(RECENT_KEY, jsonRecents);
+        localStorage.setItem(CSKeyword.RECENT_KEY, jsonRecents);
       }
     }
     if (e.key === keyboards.DOWN) {
-      if (MAX_LEN === index + 1) return;
+      if (keywordsLength === index + 1) return;
       setIndex((prev) => prev + 1);
     }
     if (e.key === keyboards.UP) {

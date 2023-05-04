@@ -6,7 +6,6 @@ import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
 import keywordApi from 'src/api/keyword';
 import { useDebounce } from 'src/hooks/useDebounce';
-import { isExpired } from 'src/utils/isExpired';
 import KeywordInput from './KeywordInput';
 import { handleSliceData } from 'src/utils/handleSliceData';
 
@@ -16,7 +15,6 @@ type Props = {
 };
 
 const KeywordList = ({ isClick, setIsClick }: Props) => {
-  const { fetchKeyword } = keywordApi;
 
   const autoRef = useRef<HTMLUListElement>(null);
   const [selectIndex, setSelectIndex] = useState<number>(-1);
@@ -25,40 +23,15 @@ const KeywordList = ({ isClick, setIsClick }: Props) => {
   const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>();
 
   const debounceKeyword = useDebounce(keyword);
+  
 
   const handleSearchKeywords = useCallback(
     async (keyword: string) => {
-      const rememberKeyword = localStorage.getItem(keyword);
-
-      if (rememberKeyword) {
-        const parseData = JSON.parse(rememberKeyword);
-        if (isExpired(parseData.expiry)) {
-          handleNewData(keyword);
-          return;
-        }
-        setkeywordInfo(handleSliceData(parseData));
-        return;
-      }
-
-      handleNewData(keyword);
+      const data = await keywordApi.fetchData(keyword);
+      setkeywordInfo(handleSliceData(data));
     },
     [setKeyword]
   );
-
-  const handleNewData = async (keyword: string) => {
-    const data = await fetchKeyword(keyword);
-    const sliceDatas = handleSliceData(data);
-    setkeywordInfo(sliceDatas);
-    handleSaveCashe(keyword, sliceDatas);
-  };
-
-  const handleSaveCashe = (keyword: string, data: Array<IKeyword>) => {
-    if (data.length > 0) {
-      const now = new Date();
-      const casheData = JSON.stringify([...data, { expiry: now.getTime() }]);
-      localStorage.setItem(keyword, casheData);
-    }
-  };
 
   useEffect(() => {
     handleSearchKeywords(debounceKeyword);
@@ -74,6 +47,7 @@ const KeywordList = ({ isClick, setIsClick }: Props) => {
         isClick={isClick}
         setIsClick={setIsClick}
         refetch={handleSearchKeywords}
+        keywordsLength={keywordInfo?.length}
       />
       {keyword && keywordInfo && isClick && (
         <CMContainer>

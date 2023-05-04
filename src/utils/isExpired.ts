@@ -1,5 +1,4 @@
-export const isExpired = (expiryTime: number) => {
-  const currentTime = new Date().getTime();
-  const difference = currentTime - expiryTime;
-  return difference >= 60 * 60 * 1000;
+export const isExpired = (cachedAt: string | null) => {
+  if (!cachedAt) return true;
+  return new Date(cachedAt).getTime() + 3600000 < new Date().getTime();
 };
