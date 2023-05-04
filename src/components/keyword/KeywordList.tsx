@@ -1,7 +1,7 @@
 import { IKeyword } from 'src/types/keyword';
 import styled from 'styled-components';
 import CMContainer from 'src/components/common/CMContainer';
-import {useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
 import keywordApi from 'src/api/keyword';
@@ -10,20 +10,20 @@ import { handleSliceData } from 'src/utils/handleSliceData';
 type Props = {
   isClick: boolean;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
-  keyword:string;
-  selectIndex:number;
-  setSelectIndex:React.Dispatch<React.SetStateAction<number>>;
+  keyword: string;
+  selectIndex: number;
+  setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const KeywordList = ({ isClick, setIsClick,keyword,selectIndex,setSelectIndex }: Props) => {
+const KeywordList = ({ isClick, setIsClick, keyword, selectIndex, setSelectIndex }: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
 
   const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>();
 
   const handleSearchKeywords = async (keyword: string) => {
-      const data = await keywordApi.fetchData(keyword);
-      setkeywordInfo(handleSliceData(data));
-    }
+    const data = await keywordApi.fetchData(keyword);
+    setkeywordInfo(handleSliceData(data));
+  };
 
   useEffect(() => {
     handleSearchKeywords(keyword);

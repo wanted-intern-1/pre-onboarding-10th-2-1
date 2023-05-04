@@ -13,30 +13,27 @@ type Props = {
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const KeywordInput = ({
-  isClick,
-  setIsClick,
-}: Props) => {
+const KeywordInput = ({ isClick, setIsClick }: Props) => {
   const onCancleBtn = (e: React.MouseEvent) => {
     e.stopPropagation();
     setKeyword('');
-    if(inputRef.current) inputRef.current.value = ""
+    if (inputRef.current) inputRef.current.value = '';
   };
 
-  const [keyword,setKeyword] = useState("")
-  const [selectIndex,setSelectIndex] = useState(-1)
+  const [keyword, setKeyword] = useState('');
+  const [selectIndex, setSelectIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearchKeyword = () => {
     if (keyword) localStorage.setItem(CSKeyword.RECENT_KEY, keyword);
   };
 
-  const debounceValue = debounce(setKeyword)
+  const debounceValue = debounce(setKeyword);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === keyboards.ESCAPE) {
       setKeyword('');
-      if(inputRef.current) inputRef.current.value = ""
+      if (inputRef.current) inputRef.current.value = '';
     }
     if (e.key === keyboards.ENTER) {
       if (keyword) {
@@ -66,11 +63,7 @@ const KeywordInput = ({
             </NoticeWrap>
           )}
           <S.SearchInputWrap>
-            <S.SearchInput
-              ref={inputRef}
-              onKeyDown={handleKeyPress}
-              onChange={debounceValue}
-            />
+            <S.SearchInput ref={inputRef} onKeyDown={handleKeyPress} onChange={debounceValue} />
             <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color="#A7AFB7" />
           </S.SearchInputWrap>
         </S.Line>
@@ -78,7 +71,13 @@ const KeywordInput = ({
           <S.SearchIcon color="#fff" />
         </S.SubmItBtn>
       </S.Box>
-      <KeywordList setSelectIndex={setSelectIndex} selectIndex={selectIndex} keyword={keyword} isClick={isClick} setIsClick={setIsClick} />
+      <KeywordList
+        setSelectIndex={setSelectIndex}
+        selectIndex={selectIndex}
+        keyword={keyword}
+        isClick={isClick}
+        setIsClick={setIsClick}
+      />
     </>
   );
 };
