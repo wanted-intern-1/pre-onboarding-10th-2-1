@@ -5,81 +5,81 @@ import { MdCancel } from 'react-icons/md';
 import useOutsideClick from 'src/hooks/useOutsideClick';
 import { CSKeyword } from 'src/utils/const/keyword';
 import { keyboards } from 'src/utils/const/keyboard';
+import KeywordList from './KeywordList';
+import debounce from 'src/utils/debounce';
 
 type Props = {
-  keyword: string | undefined;
   isClick: boolean;
-  setKeyword: React.Dispatch<React.SetStateAction<string>>;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
-  refetch: (keyword: string) => Promise<void>;
-  setIndex: React.Dispatch<React.SetStateAction<number>>;
-  index: number;
-  keywordsLength: number | undefined;
 };
 
 const KeywordInput = ({
-  keyword,
-  setKeyword,
   isClick,
   setIsClick,
-  refetch,
-  setIndex,
-  index,
-  keywordsLength,
 }: Props) => {
   const onCancleBtn = (e: React.MouseEvent) => {
     e.stopPropagation();
     setKeyword('');
+    if(inputRef.current) inputRef.current.value = ""
   };
+
+  const [keyword,setKeyword] = useState("")
+  const [selectIndex,setSelectIndex] = useState(-1)
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearchKeyword = () => {
     if (keyword) localStorage.setItem(CSKeyword.RECENT_KEY, keyword);
   };
 
+  const debounceValue = debounce(setKeyword)
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === keyboards.ESCAPE) {
       setKeyword('');
+      if(inputRef.current) inputRef.current.value = ""
     }
     if (e.key === keyboards.ENTER) {
       if (keyword) {
         const recents = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
         const jsonRecents = JSON.stringify([...recents, keyword]);
-        refetch(keyword);
         localStorage.setItem(CSKeyword.RECENT_KEY, jsonRecents);
       }
     }
     if (e.key === keyboards.DOWN) {
-      if (keywordsLength === index + 1) return;
-      setIndex((prev) => prev + 1);
+      if (CSKeyword.MAX_LEN === selectIndex + 1) return;
+      setSelectIndex((prev) => prev + 1);
     }
     if (e.key === keyboards.UP) {
-      if (index === 0) return;
-      setIndex((prev) => prev - 1);
+      if (selectIndex === 0) return;
+      setSelectIndex((prev) => prev - 1);
     }
   };
 
   return (
-    <S.Box isClick={isClick}>
-      <S.Line onClick={() => setIsClick(true)}>
-        {!isClick && !keyword && (
-          <NoticeWrap>
-            <S.SearchInputIcon />
-            <S.Notice>질환명을 입력해 주세요</S.Notice>
-          </NoticeWrap>
-        )}
-        <S.SearchInputWrap>
-          <S.SearchInput
-            onKeyDown={handleKeyPress}
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-          />
-          <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color="#A7AFB7" />
-        </S.SearchInputWrap>
-      </S.Line>
-      <S.SubmItBtn onClick={handleSearchKeyword}>
-        <S.SearchIcon color="#fff" />
-      </S.SubmItBtn>
-    </S.Box>
+    <>
+      <S.Box isClick={isClick}>
+        <S.Line onClick={() => setIsClick(true)}>
+          {!isClick && !keyword && (
+            <NoticeWrap>
+              <S.SearchInputIcon />
+              <S.Notice>질환명을 입력해 주세요</S.Notice>
+            </NoticeWrap>
+          )}
+          <S.SearchInputWrap>
+            <S.SearchInput
+              ref={inputRef}
+              onKeyDown={handleKeyPress}
+              onChange={debounceValue}
+            />
+            <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color="#A7AFB7" />
+          </S.SearchInputWrap>
+        </S.Line>
+        <S.SubmItBtn onClick={handleSearchKeyword}>
+          <S.SearchIcon color="#fff" />
+        </S.SubmItBtn>
+      </S.Box>
+      <KeywordList setSelectIndex={setSelectIndex} selectIndex={selectIndex} keyword={keyword} isClick={isClick} setIsClick={setIsClick} />
+    </>
   );
 };
 

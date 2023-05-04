@@ -1,52 +1,37 @@
 import { IKeyword } from 'src/types/keyword';
 import styled from 'styled-components';
 import CMContainer from 'src/components/common/CMContainer';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState } from 'react';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
 import keywordApi from 'src/api/keyword';
-import { useDebounce } from 'src/hooks/useDebounce';
-import KeywordInput from './KeywordInput';
 import { handleSliceData } from 'src/utils/handleSliceData';
 
 type Props = {
   isClick: boolean;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  keyword:string;
+  selectIndex:number;
+  setSelectIndex:React.Dispatch<React.SetStateAction<number>>;
 };
 
-const KeywordList = ({ isClick, setIsClick }: Props) => {
+const KeywordList = ({ isClick, setIsClick,keyword,selectIndex,setSelectIndex }: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
-  const [selectIndex, setSelectIndex] = useState<number>(-1);
 
-  const [keyword, setKeyword] = useState('');
   const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>();
 
-  const debounceKeyword = useDebounce(keyword);
-
-  const handleSearchKeywords = useCallback(
-    async (keyword: string) => {
+  const handleSearchKeywords = async (keyword: string) => {
       const data = await keywordApi.fetchData(keyword);
       setkeywordInfo(handleSliceData(data));
-    },
-    [setKeyword]
-  );
+    }
 
   useEffect(() => {
-    handleSearchKeywords(debounceKeyword);
-  }, [debounceKeyword]);
+    handleSearchKeywords(keyword);
+    setSelectIndex(-1);
+  }, [keyword]);
 
   return (
     <>
-      <KeywordInput
-        index={selectIndex}
-        setIndex={setSelectIndex}
-        keyword={keyword}
-        setKeyword={setKeyword}
-        isClick={isClick}
-        setIsClick={setIsClick}
-        refetch={handleSearchKeywords}
-        keywordsLength={keywordInfo?.length}
-      />
       {keyword && keywordInfo && isClick && (
         <CMContainer>
           <>
