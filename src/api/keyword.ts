@@ -3,7 +3,6 @@ import { isExpired } from 'src/utils/isExpired';
 
 const BASE_URL = '/api/v1/search-conditions';
 
-// cache가 존재하는지와 만료되었는지를 확인하여 fetch가 필요한지 여부를 반환
 const needFetch = async (keyword: string) => {
   const url = `${BASE_URL}/?name=${keyword}`;
   const cache = await caches.open('keywords');
