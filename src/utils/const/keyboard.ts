@@ -1,6 +1,6 @@
 export const keyboards = {
-  ENTER: "Enter",
-  ESCAPE: "Escape",
-  UP: "ArrowUp",
-  DOWN: "ArrowDown"
-}
+  ENTER: 'Enter',
+  ESCAPE: 'Escape',
+  UP: 'ArrowUp',
+  DOWN: 'ArrowDown',
+};

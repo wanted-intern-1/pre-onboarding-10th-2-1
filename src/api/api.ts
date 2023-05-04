@@ -1,3 +1,3 @@
-import keyword from 'src/api/keyword'
+import keyword from 'src/api/keyword';
 
-export {keyword}
+export { keyword };

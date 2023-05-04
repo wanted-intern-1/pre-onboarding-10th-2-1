@@ -1,4 +1,4 @@
 export interface IKeyword {
-  name:string;
-  id:number;
+  name: string;
+  id: number;
 }

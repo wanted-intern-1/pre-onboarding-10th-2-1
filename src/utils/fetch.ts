@@ -4,8 +4,7 @@ const BASE_URL = 'https://api.clinicaltrialskorea.com/api/v1/search-conditions/'
 
 export const client = axios.create();
 
-const isSuccessfulStatus = (status:number) =>
-  (status >= 200 && status < 300) || status === 304;
+const isSuccessfulStatus = (status: number) => (status >= 200 && status < 300) || status === 304;
 
 client.interceptors.request.use(
   (config) => {
@@ -22,9 +21,7 @@ client.interceptors.response.use(
     } else {
       const { error, message, statusCode } = response.data;
       return Promise.reject(
-        new Error(
-          `statusCode: ${statusCode}, message: ${message}, error: ${error}`
-        )
+        new Error(`statusCode: ${statusCode}, message: ${message}, error: ${error}`)
       );
     }
   },
