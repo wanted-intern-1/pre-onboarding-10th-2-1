@@ -15,7 +15,6 @@ type Props = {
 };
 
 const KeywordList = ({ isClick, setIsClick }: Props) => {
-
   const autoRef = useRef<HTMLUListElement>(null);
   const [selectIndex, setSelectIndex] = useState<number>(-1);
 
@@ -23,7 +22,6 @@ const KeywordList = ({ isClick, setIsClick }: Props) => {
   const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>();
 
   const debounceKeyword = useDebounce(keyword);
-  
 
   const handleSearchKeywords = useCallback(
     async (keyword: string) => {

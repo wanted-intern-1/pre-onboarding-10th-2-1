@@ -25,7 +25,7 @@ const KeywordInput = ({
   refetch,
   setIndex,
   index,
-  keywordsLength
+  keywordsLength,
 }: Props) => {
   const onCancleBtn = (e: React.MouseEvent) => {
     e.stopPropagation();
