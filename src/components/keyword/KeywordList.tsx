@@ -8,6 +8,7 @@ import keywordApi from 'src/api/keyword';
 import { useDebounce } from 'src/hooks/useDebounce';
 import KeywordInput from './KeywordInput';
 import { handleSliceData } from 'src/utils/handleSliceData';
+import { highlight } from 'src/utils/highlight';
 
 type Props = {
   isClick: boolean;
@@ -58,7 +59,12 @@ const KeywordList = ({ isClick, selectIndex, setIsClick, setSelectIndex }: Props
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
                   {keywordInfo.map((keywordItem, idx) => (
-                    <S.SearchItem focus={selectIndex === idx + 1}>{keywordItem.name}</S.SearchItem>
+                    <S.SearchItem
+                      dangerouslySetInnerHTML={{
+                        __html: highlight(keywordItem.name, debounceKeyword),
+                      }}
+                      focus={selectIndex === idx + 1}
+                    />
                   ))}
                 </>
               ) : (
@@ -77,12 +83,18 @@ const S = {
   SearchWrap: styled.ul``,
   SearchItem: styled.li<{ focus: boolean }>`
     padding: 10px 20px;
-    font-weight: bold;
     cursor: pointer;
     &:hover {
       background-color: rgba(0, 0, 0, 0.1);
     }
     background-color: ${({ focus }) => (focus ? 'rgba(0,0,0,0.1)' : '#fff')};
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    strong {
+      font-weight: bold;
+    }
   `,
 };
 
