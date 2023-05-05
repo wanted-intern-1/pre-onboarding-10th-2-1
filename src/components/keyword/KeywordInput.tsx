@@ -1,8 +1,7 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
-import useOutsideClick from 'src/hooks/useOutsideClick';
 import { CSKeyword } from 'src/utils/const/keyword';
 import { keyboards } from 'src/utils/const/keyboard';
 import KeywordList from './KeywordList';
