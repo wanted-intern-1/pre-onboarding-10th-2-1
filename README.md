@@ -3,6 +3,7 @@
 # 원티드 프리온보딩 프론트엔드 - 1팀
 
 휴먼 스케이프 기업 과제 수행
+#### [📜과제 목표](#📜과제-목표)
 
 [한국 임상정보 사이트](https://clinicaltrialskorea.com/)의 검색 영역 클론 코딩
 
@@ -10,10 +11,74 @@
 
 #### 배포링크 : https://main--pre-onboarding-2-1.netlify.app/
 
-#### 팀 노션 : https://iamdooddi.notion.site/T1-8d53ec6136ce454e95de6cd5c0e0ed9b
+#### 팀 노션 : [page link](https://iamdooddi.notion.site/T1-8d53ec6136ce454e95de6cd5c0e0ed9b)
 
-#### 협업 방식 [page link](https://iamdooddi.notion.site/d4d24d73a2e9441597ca69da749fd8a1)
+#### 협업 방식 : [page link](https://iamdooddi.notion.site/d4d24d73a2e9441597ca69da749fd8a1)
 
+## 팀 소개
+
+| 이름          | github                          |
+| ------------- | ------------------------------- |
+| 엄성현 (팀장) | https://github.com/eomsteve     |
+| 전하준        | https://github.com/Majesty-jun  |
+| 차동엽        | https://github.com/dongyeopca   |
+| 노지원        | https://github.com/no-support   |
+| 손유정        | https://github.com/yuj1818      |
+| 김다현        | https://github.com/Plu457       |
+| 정승덕        | https://github.com/seungdeok    |
+| 최승주        | https://github.com/VictoryJu    |
+| 박우현        | https://github.com/woohyun-park |
+| 갈미현        | https://github.com/Kal-MH       |
+
+## 프로젝트 구조
+```
+📦src
+ ┣ 📂api
+ ┃ ┣ 📜api.ts
+ ┃ ┣ 📜keyword.ts
+ ┃ ┗ 📜localStorage.ts
+ ┣ 📂assets
+ ┃ ┣ 📜IllustPersonOne.tsx
+ ┃ ┣ 📜IllustPersonThree.tsx
+ ┃ ┣ 📜IllustPersonTwo.tsx
+ ┃ ┗ 📜index.ts
+ ┣ 📂components
+ ┃ ┣ 📂common
+ ┃ ┃ ┣ 📜CMContainer.tsx
+ ┃ ┃ ┗ 📜CMNoticeLIne.tsx
+ ┃ ┣ 📂keyword
+ ┃ ┃ ┣ 📜KeywordInput.tsx
+ ┃ ┃ ┣ 📜KeywordList.tsx
+ ┃ ┃ ┣ 📜KeywordMain.tsx
+ ┃ ┃ ┗ 📜KeywordRecent.tsx
+ ┃ ┗ 📂main
+ ┃ ┃ ┣ 📜Background.tsx
+ ┃ ┃ ┗ 📜Main.tsx
+ ┣ 📂hooks
+ ┃ ┣ 📜useDebounce.ts
+ ┃ ┣ 📜useForwardRef.ts
+ ┃ ┗ 📜useOutsideClick.ts
+ ┣ 📂pages
+ ┃ ┗ 📂main
+ ┃ ┃ ┗ 📜MainPage.tsx
+ ┣ 📂routes
+ ┃ ┗ 📜Router.tsx
+ ┣ 📂styles
+ ┃ ┗ 📜global.ts
+ ┣ 📂types
+ ┃ ┗ 📜keyword.ts
+ ┣ 📂utils
+ ┃ ┣ 📂const
+ ┃ ┃ ┣ 📜keyboard.ts
+ ┃ ┃ ┗ 📜keyword.ts
+ ┃ ┣ 📜debounce.ts
+ ┃ ┣ 📜handleSliceData.ts
+ ┃ ┣ 📜highlight.ts
+ ┃ ┗ 📜isExpired.ts
+ ┣ 📜App.tsx
+ ┣ 📜index.css
+ ┣ 📜index.tsx
+```
 ---
 
 #### local실행시
@@ -170,7 +235,7 @@ const handleKeyPress = (e: React.KeyboardEvent) => {
 
 ### [useDebounce](https://github.com/wanted-intern-1/pre-onboarding-10th-2-1/blob/main/src/hooks/useDebounce.ts)
 
-input의 `onChange`이벤트가 호출될때 사용자의 입력을 감지하고 300ms 이내에 추가 입력이 없다면 입력이 끝난것으로 판단, 입력이 끝났을때만 API호출 전략을 사용했습니다.
+input의 `onChange`이벤트가 호출될때 사용자의 입력을 감지하고 200ms 이내에 추가 입력이 없다면 입력이 끝난것으로 판단, 입력이 끝났을때만 API호출 전략을 사용했습니다.
 
 ```typescript
 import { useState, useEffect } from 'react';
