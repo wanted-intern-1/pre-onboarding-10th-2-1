@@ -53,7 +53,8 @@ const KeywordList = ({
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
                   {keywords.map((keywordItem, idx) => (
-                    <S.SearchItem key={keywordItem.id}
+                    <S.SearchItem
+                      key={keywordItem.id}
                       dangerouslySetInnerHTML={{
                         __html: highlight(keywordItem.name, keyword),
                       }}
