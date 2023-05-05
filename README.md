@@ -3,6 +3,7 @@
 # 원티드 프리온보딩 프론트엔드 - 1팀
 
 휴먼 스케이프 기업 과제 수행
+
 #### [📜과제 목표](#📜과제-목표)
 
 [한국 임상정보 사이트](https://clinicaltrialskorea.com/)의 검색 영역 클론 코딩
@@ -31,6 +32,7 @@
 | 갈미현        | https://github.com/Kal-MH       |
 
 ## 프로젝트 구조
+
 ```
 📦src
  ┣ 📂api
@@ -79,6 +81,7 @@
  ┣ 📜index.css
  ┣ 📜index.tsx
 ```
+
 ---
 
 #### local실행시
