@@ -14,11 +14,12 @@ type Props = {
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
-  refetch: (keyword: string) => Promise<void>;
+  handleSearch: (keyword: string) => Promise<void>;
 };
 
-const KeywordInput = ({ isClick, keywords, setIsLoading, setIsClick, refetch }: Props) => {
+const KeywordInput = ({ isClick, keywords, setIsLoading, setIsClick, handleSearch }: Props) => {
   const { keyword, selectIndex, setKeyword, setSelectIndex } = useContext(KeywordContext);
+
   const onCancleBtn = (e: React.MouseEvent) => {
     e.stopPropagation();
     setKeyword('');
@@ -38,7 +39,7 @@ const KeywordInput = ({ isClick, keywords, setIsLoading, setIsClick, refetch }: 
       localStorage.setItem(CSKeyword.RECENT_KEY, jsonRecents);
     };
     if (keyword) {
-      refetch(keyword);
+      handleSearch(keyword);
       addRecent(selectIndex === -1 || selectIndex === 0 ? keyword : keywords[selectIndex - 1].name);
     } else {
       if (selectIndex === -1) return;
@@ -82,14 +83,21 @@ const KeywordInput = ({ isClick, keywords, setIsLoading, setIsClick, refetch }: 
     }
   };
 
+  const handleInputClick = () => {
+    setIsClick(true);
+    setSelectIndex(-1);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    setIsLoading(true);
+    setSelectIndex(-1);
+    handleSearch(keyword);
+  };
+
   return (
     <S.Box isClick={isClick}>
-      <S.Line
-        onClick={() => {
-          setIsClick(true);
-          setSelectIndex(-1);
-        }}
-      >
+      <S.Line onClick={handleInputClick}>
         {!isClick && !keyword && (
           <NoticeWrap>
             <S.SearchInputIcon />
@@ -97,15 +105,7 @@ const KeywordInput = ({ isClick, keywords, setIsLoading, setIsClick, refetch }: 
           </NoticeWrap>
         )}
         <S.SearchInputWrap>
-          <S.SearchInput
-            onKeyDown={handleKeyPress}
-            value={keyword}
-            onChange={(e) => {
-              setKeyword(e.target.value);
-              setIsLoading(true);
-              setSelectIndex(0);
-            }}
-          />
+          <S.SearchInput onKeyDown={handleKeyPress} value={keyword} onChange={handleChange} />
           <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color="#A7AFB7" />
         </S.SearchInputWrap>
       </S.Line>

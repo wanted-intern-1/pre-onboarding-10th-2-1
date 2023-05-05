@@ -1,63 +1,39 @@
 import { IKeyword } from 'src/types/keyword';
 import styled from 'styled-components';
 import CMContainer from 'src/components/common/CMContainer';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
-import keywordApi from 'src/api/keyword';
-import { useDebounce } from 'src/hooks/useDebounce';
-import KeywordInput from './KeywordInput';
-import { handleSliceData } from 'src/utils/handleSliceData';
 import { highlight } from 'src/utils/highlight';
 import { KeywordContext } from './KeywordMain';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 type Props = {
+  keywords: IKeyword[];
   isClick: boolean;
+  isLoading: boolean;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSearch: (keyword: string) => Promise<void>;
 };
 
-const KeywordList = ({ isClick, setIsClick }: Props) => {
+const KeywordList = ({ keywords, isClick, isLoading, setIsClick, handleSearch }: Props) => {
+  const { keyword, selectIndex } = useContext(KeywordContext);
   const autoRef = useRef<HTMLUListElement>(null);
-  const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { keyword, selectIndex, setKeyword } = useContext(KeywordContext);
-
   const debounceKeyword = useDebounce(keyword);
-
-  const handleSearchKeywords = useCallback(
-    async (keyword: string) => {
-      const data = await keywordApi.fetchData(keyword);
-      setkeywordInfo(handleSliceData(data));
-      setIsLoading(false);
-    },
-    [setKeyword]
-  );
-
-  useEffect(() => {
-    handleSearchKeywords(debounceKeyword);
-  }, [debounceKeyword]);
 
   return (
     <>
-      <KeywordInput
-        keywords={keywordInfo}
-        isClick={isClick}
-        isLoading={isLoading}
-        setIsClick={setIsClick}
-        setIsLoading={setIsLoading}
-        refetch={handleSearchKeywords}
-      />
-      {keyword && isClick && (
+      {keyword && keywords && isClick && (
         <CMContainer>
           <>
             <S.SearchWrap ref={autoRef}>
               <S.SearchItem focus={selectIndex === 0} onClick={() => {}}>
                 {keyword}
               </S.SearchItem>
-              {keywordInfo.length > 0 ? (
+              {keywords.length > 0 ? (
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
-                  {keywordInfo.map((keywordItem, idx) => (
+                  {keywords.map((keywordItem, idx) => (
                     <S.SearchItem
                       dangerouslySetInnerHTML={{
                         __html: highlight(keywordItem.name, debounceKeyword),
