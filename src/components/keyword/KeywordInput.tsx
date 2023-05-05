@@ -133,7 +133,7 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
               onChange={handleChange}
               ref={refLocal}
             />
-            <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color="#A7AFB7" />
+            {isClick && <S.SearchInputCancleIcon onClick={onCancleBtn} color="#A7AFB7" />}
           </S.SearchInputWrap>
         </S.Line>
         <S.SubmItBtn onClick={handleSearchKeyword}>
@@ -195,8 +195,7 @@ const S = {
   Notice: styled.div`
     margin-left: 10px;
   `,
-  SearchInputCancleIcon: styled(MdCancel)<{ isClick: boolean }>`
-    display: ${({ isClick }) => (isClick ? 'block' : 'none')};
+  SearchInputCancleIcon: styled(MdCancel)`
     width: 25px;
     height: 25px;
     cursor: pointer;
