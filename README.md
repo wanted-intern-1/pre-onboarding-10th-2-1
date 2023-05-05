@@ -279,7 +279,7 @@ export const highlight = (name: string, keyword: string) => {
 
 검색창에 입력된 값을 통해 API를 호출하여 추천 검색어 리스트를 확인 할 수 있습니다.
 
-![녹화_2023_05_05_20_22_33_587](https://user-images.githubusercontent.com/66008508/236445121-96446072-3682-4d2a-b4de-0ef23f2d503f.gif)
+![녹화_2023_05_05_21_21_22_699](https://user-images.githubusercontent.com/66008508/236456578-c2fcd66d-627a-4055-a22a-554f57bb34ec.gif)
 
 - API를 호출할 때 마다 console.info("calling api") 출력을 통해 콘솔창에서 API 호출 횟수 확인
 - 캐싱된 값을 이용해 API를 매번 호출하지 않고, 한번 호출 되었던 API일 경우 캐싱된 값 이용
