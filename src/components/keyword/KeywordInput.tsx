@@ -65,38 +65,44 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
     };
 
     const moveRecentUp = (recents: string[]) => {
-      if (selectIndex <= 1) return setSelectIndex(recents.length);
-      setSelectIndex((prev) => prev - 1);
+      setSelectIndex((prev) => (prev <= 1 ? recents.length : prev - 1));
     };
+
     const moveKeywordUp = (keywords: IKeyword[]) => {
-      if (selectIndex <= 0) return setSelectIndex(keywords.length);
-      setSelectIndex((prev) => prev - 1);
+      setSelectIndex((prev) => (prev <= 0 ? keywords.length : prev - 1));
     };
+
     const moveRecentDown = (recents: string[]) => {
-      if (selectIndex === -1) return setSelectIndex((prev) => prev + 2);
-      if (recents.length < selectIndex + 1) return setSelectIndex(1);
-      setSelectIndex((prev) => prev + 1);
+      setSelectIndex((prev) => (selectIndex === -1 ? 1 : prev >= recents.length ? 1 : prev + 1));
     };
+
     const moveKeywordDown = (keywords: IKeyword[]) => {
-      if (keywords.length < selectIndex + 1) return setSelectIndex(0);
-      setSelectIndex((prev) => prev + 1);
+      setSelectIndex((prev) => (prev >= keywords.length - 1 ? 0 : prev + 1));
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
       if (e.nativeEvent.isComposing) return;
       const recents = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
-      if (e.key === keyboards.ESCAPE) {
-        setKeyword('');
-      } else if (e.key === keyboards.ENTER) {
-        handleEnterPress(keyword, recents);
-      } else if (e.key === keyboards.DOWN) {
-        e.preventDefault();
-        if (keyword) moveKeywordDown(keywords);
-        else moveRecentDown(recents);
-      } else if (e.key === keyboards.UP) {
-        e.preventDefault();
-        if (keyword) moveKeywordUp(keywords);
-        else moveRecentUp(recents);
+      const moveUp = keyword ? moveKeywordUp : moveRecentUp;
+      const moveDown = keyword ? moveKeywordDown : moveRecentDown;
+
+      switch (e.key) {
+        case keyboards.ESCAPE:
+          setKeyword('');
+          break;
+        case keyboards.ENTER:
+          handleEnterPress(keyword, recents);
+          break;
+        case keyboards.DOWN:
+          e.preventDefault();
+          moveDown(keyword ? keywords : recents);
+          break;
+        case keyboards.UP:
+          e.preventDefault();
+          moveUp(keyword ? keywords : recents);
+          break;
+        default:
+          break;
       }
     };
 
