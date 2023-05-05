@@ -1,5 +1,6 @@
-export const isExpired = (expiryTime: number) => {
-  const currentTime = new Date().getTime();
-  const difference = currentTime - expiryTime;
-  return difference >= 60 * 60 * 1000;
+import { CSKeyword } from "./const/keyword";
+
+export const isExpired = (cachedAt: string | null) => {
+  if (!cachedAt) return true;
+  return new Date(cachedAt).getTime() + CSKeyword.EXPIRE_TIME < new Date().getTime();
 };
