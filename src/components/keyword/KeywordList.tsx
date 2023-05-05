@@ -1,55 +1,78 @@
 import { IKeyword } from 'src/types/keyword';
 import styled from 'styled-components';
 import CMContainer from 'src/components/common/CMContainer';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
-import keywordApi from 'src/api/keyword';
-import { handleSliceData } from 'src/utils/handleSliceData';
 import { highlight } from 'src/utils/highlight';
+import { useDebounce } from 'src/hooks/useDebounce';
+import { addRecentKeyword } from 'src/api/localStorage';
 
 type Props = {
-  isClick: boolean;
-  setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
   keyword: string;
   selectIndex: number;
+  keywords: IKeyword[];
+  isClick: boolean;
+  isLoading: boolean;
+  inputRef: React.RefObject<HTMLInputElement>;
+  setKeyword: React.Dispatch<React.SetStateAction<string>>;
+  setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
+  handleSearch: (keyword: string) => Promise<void>;
 };
 
-const KeywordList = ({ isClick, setIsClick, keyword, selectIndex, setSelectIndex }: Props) => {
+const KeywordList = ({
+  keyword,
+  selectIndex,
+  keywords,
+  isClick,
+  isLoading,
+  inputRef,
+  setKeyword,
+  setIsClick,
+  setSelectIndex,
+  handleSearch,
+}: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
+  // TODO: debounce 수정
+  const debounceKeyword = useDebounce(keyword);
 
-  const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>();
-
-  const handleSearchKeywords = async (keyword: string) => {
-    const data = await keywordApi.fetchData(keyword);
-    setkeywordInfo(handleSliceData(data));
+  const handleKeywordClick = (recent: string) => {
+    inputRef?.current?.blur();
+    setIsClick(false);
+    setSelectIndex(-1);
+    addRecentKeyword(recent);
+    setKeyword(recent);
   };
 
   useEffect(() => {
-    handleSearchKeywords(keyword);
-    setSelectIndex(-1);
-  }, [keyword]);
+    handleSearch(debounceKeyword);
+  }, [debounceKeyword]);
 
   return (
     <>
-      {keyword && keywordInfo && isClick && (
+      {keyword && keywords && isClick && (
         <CMContainer>
           <>
-            <S.KeywordLine>{keyword}</S.KeywordLine>
             <S.SearchWrap ref={autoRef}>
-              {keywordInfo.length > 0 ? (
+              <S.SearchItem focus={selectIndex === 0} onClick={() => {}}>
+                {keyword}
+              </S.SearchItem>
+              {keywords.length > 0 ? (
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
-                  {keywordInfo.map((keywordItem, idx) => (
+                  {keywords.map((keywordItem, idx) => (
                     <S.SearchItem
                       dangerouslySetInnerHTML={{
                         __html: highlight(keywordItem.name, keyword),
                       }}
-                      focus={selectIndex === idx}
+                      focus={selectIndex === idx + 1}
+                      onClick={() => handleKeywordClick(keywordItem.name)}
                     />
                   ))}
                 </>
+              ) : isLoading ? (
+                <CMNoticeLIne>검색 중...</CMNoticeLIne>
               ) : (
                 <CMNoticeLIne>검색어가 없습니다.</CMNoticeLIne>
               )}
@@ -57,7 +80,9 @@ const KeywordList = ({ isClick, setIsClick, keyword, selectIndex, setSelectIndex
           </>
         </CMContainer>
       )}
-      {!keyword && isClick && <KeywordRecent setIsClick={setIsClick} />}
+      {!keyword && isClick && (
+        <KeywordRecent selectIndex={selectIndex} handleKeywordClick={handleKeywordClick} />
+      )}
     </>
   );
 };
@@ -77,14 +102,6 @@ const S = {
     white-space: nowrap;
     strong {
       font-weight: bold;
-    }
-  `,
-  KeywordLine: styled.div`
-    margin-top: 10px;
-    padding: 10px 20px;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
     }
   `,
 };
