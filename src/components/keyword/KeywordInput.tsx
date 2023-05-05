@@ -54,7 +54,7 @@ const KeywordInput = ({ isClick, setIsClick }: Props) => {
     <>
       <S.Box isClick={isClick}>
         <S.Line onClick={() => setIsClick(true)}>
-          {!isClick && !keyword && (
+          {!isClick && inputRef.current && !inputRef.current.value && (
             <NoticeWrap>
               <S.SearchInputIcon />
               <S.Notice>질환명을 입력해 주세요</S.Notice>
