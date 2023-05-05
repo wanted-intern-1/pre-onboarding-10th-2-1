@@ -1,4 +1,3 @@
-
 import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -78,7 +77,7 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
     };
 
     const moveKeywordDown = (keywords: IKeyword[]) => {
-      setSelectIndex((prev) => (prev >= keywords.length - 1 ? 0 : prev + 1));
+      setSelectIndex((prev) => (prev >= keywords.length ? 0 : prev + 1));
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -122,7 +121,7 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
       <S.Box isClick={isClick}>
         <S.Line onClick={handleInputClick}>
           {!isClick && !keyword && (
-            <NoticeWrap>
+            <S.NoticeWrap>
               <S.SearchInputIcon />
               <S.Notice>질환명을 입력해 주세요</S.Notice>
             </S.NoticeWrap>

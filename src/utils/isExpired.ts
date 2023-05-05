@@ -1,4 +1,4 @@
-import { CSKeyword } from "./const/keyword";
+import { CSKeyword } from './const/keyword';
 
 export const isExpired = (cachedAt: string | null) => {
   if (!cachedAt) return true;
