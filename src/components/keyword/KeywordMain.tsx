@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import KeywordList from './KeywordList';
 import styled from 'styled-components';
 import useOutsideClick from 'src/hooks/useOutsideClick';
+import KeywordInput from './KeywordInput';
 
 const KeywordMain = () => {
   const [isClick, setIsClick] = useState(false);
@@ -11,7 +11,7 @@ const KeywordMain = () => {
 
   return (
     <S.Container ref={keywordRef}>
-      <KeywordList isClick={isClick} setIsClick={setIsClick} />
+      <KeywordInput isClick={isClick} setIsClick={setIsClick} />
     </S.Container>
   );
 };

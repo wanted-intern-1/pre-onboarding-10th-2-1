@@ -1,7 +1,7 @@
 import React from 'react';
 import CMContainer from '../common/CMContainer';
 import styled from 'styled-components';
-import { RECENT_KEY } from 'src/utils/const/keyword';
+import { CSKeyword } from 'src/utils/const/keyword';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 
 const KeywordRecent = ({
@@ -9,7 +9,7 @@ const KeywordRecent = ({
 }: {
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const recentDatas = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+  const recentDatas = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
   return (
     <CMContainer>
       <S.SearchWrap>
