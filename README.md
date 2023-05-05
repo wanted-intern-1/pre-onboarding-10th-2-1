@@ -296,7 +296,7 @@ export const handleSliceData = (data: [] | any) => {
 
 ## 💽캐싱
 
-web API의 CachingStorage를 활용하여 url요청에 대한 캐시값을 저장하기 위해 fetchAPI를 이용해 구현했습니다. 이미 입력했던 키워드일 경우 캐싱된 데이터를 사용하며 API 호출을 보내지 않습니다. 만약 시간이 지나 캐시된 데이터가 사라졌거나, 처음 검색하는 키워드일 경우 API 통신후 CacheStorage에 캐싱합니다.
+web API의 CachingStorage를 활용하여 url요청에 대한 캐시값을 저장하기 위해 fetchAPI를 이용해 구현했습니다. 이미 입력했던 키워드일 경우 캐싱된 데이터를 사용하며 API 호출을 보내지 않습니다. 만약 `isExpired()` 함수를 통해 시간이 지나 캐시된 데이터가 expired 되었다고 판단되거나, 처음 검색하는 키워드일 경우 API 통신후 CacheStorage에 캐싱합니다.
 
 [CacheAPI 공식문서](https://developer.mozilla.org/en-US/docs/Web/API/Cache)
 
@@ -354,4 +354,4 @@ export default keywordApi;
 
 ### LocalStorage vs CacheAPI
 
-localStorage로 검색 결과를 캐싱하는 전략을 사용하는 방법을 고려했으나 캐싱데이터의 생명주기를 expiredTime 으로 관리해야 했습니다. expiredTime이 지날경우 데이터를 삭제 하는 기능을 구현하기 위해선 특정 시점에서 localStorage를 탐색하고, 제거해주어야 하는 기능이 필요했습니다. 이 기능을 구현하기 보다는, expiredTime으로 캐시 데이터를 잘 활용할 수 있는 `CacheStorage`, `CacheAPI`를 적용했습니다. `CacheAPI`는 url요청시 `fetch`문법을 사용 해서 API 통신을 시도하게 되는데 기존의 `axios`와는 호환이 안되는문제가 있어 전체 프로젝트의 API통신 부분을 `axios` 에서 `fetch` 로 수정하여 구현했습니다.
+localStorage로 검색 결과를 캐싱하는 전략을 사용하는 방법을 고려했으나 **특정 url별로 캐싱을 하기 위한 전략**으로 `CacheAPI` 사용하는 것이 프로젝트 구현 의도에 더 맞다고 판단하여 `CacheStorage`, `CacheAPI`를 적용했습니다. `CacheAPI`는 url요청시 `fetch`문법을 사용 해서 API 통신을 시도하게 되는데 기존의 `axios`와는 호환이 안되는문제가 있어 전체 프로젝트의 API통신 부분을 `axios` 에서 `fetch` 로 수정하여 구현했습니다.
