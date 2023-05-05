@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
@@ -6,28 +6,19 @@ import { CSKeyword } from 'src/utils/const/keyword';
 import { keyboards } from 'src/utils/const/keyboard';
 import { IKeyword } from 'src/types/keyword';
 import { handleSliceData } from 'src/utils/handleSliceData';
+import { KeywordContext } from './KeywordMain';
 
 type Props = {
-  keyword: string;
   isClick: boolean;
-  selectIndex: number;
   keywords: IKeyword[];
-  setKeyword: React.Dispatch<React.SetStateAction<string>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
   refetch: (keyword: string) => Promise<void>;
 };
 
-const KeywordInput = ({
-  keyword,
-  isClick,
-  selectIndex,
-  keywords,
-  setKeyword,
-  setIsClick,
-  setSelectIndex,
-  refetch,
-}: Props) => {
+const KeywordInput = ({ isClick, keywords, setIsLoading, setIsClick, refetch }: Props) => {
+  const { keyword, selectIndex, setKeyword, setSelectIndex } = useContext(KeywordContext);
   const onCancleBtn = (e: React.MouseEvent) => {
     e.stopPropagation();
     setKeyword('');
@@ -111,6 +102,7 @@ const KeywordInput = ({
             value={keyword}
             onChange={(e) => {
               setKeyword(e.target.value);
+              setIsLoading(true);
               setSelectIndex(0);
             }}
           />

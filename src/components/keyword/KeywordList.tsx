@@ -1,7 +1,7 @@
 import { IKeyword } from 'src/types/keyword';
 import styled from 'styled-components';
 import CMContainer from 'src/components/common/CMContainer';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
 import keywordApi from 'src/api/keyword';
@@ -9,18 +9,18 @@ import { useDebounce } from 'src/hooks/useDebounce';
 import KeywordInput from './KeywordInput';
 import { handleSliceData } from 'src/utils/handleSliceData';
 import { highlight } from 'src/utils/highlight';
+import { KeywordContext } from './KeywordMain';
 
 type Props = {
   isClick: boolean;
-  selectIndex: number;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const KeywordList = ({ isClick, selectIndex, setIsClick, setSelectIndex }: Props) => {
+const KeywordList = ({ isClick, setIsClick }: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
-  const [keyword, setKeyword] = useState('');
   const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { keyword, selectIndex, setKeyword } = useContext(KeywordContext);
 
   const debounceKeyword = useDebounce(keyword);
 
@@ -28,6 +28,7 @@ const KeywordList = ({ isClick, selectIndex, setIsClick, setSelectIndex }: Props
     async (keyword: string) => {
       const data = await keywordApi.fetchData(keyword);
       setkeywordInfo(handleSliceData(data));
+      setIsLoading(false);
     },
     [setKeyword]
   );
@@ -39,13 +40,11 @@ const KeywordList = ({ isClick, selectIndex, setIsClick, setSelectIndex }: Props
   return (
     <>
       <KeywordInput
-        keyword={keyword}
-        setKeyword={setKeyword}
-        selectIndex={selectIndex}
         keywords={keywordInfo}
         isClick={isClick}
+        isLoading={isLoading}
         setIsClick={setIsClick}
-        setSelectIndex={setSelectIndex}
+        setIsLoading={setIsLoading}
         refetch={handleSearchKeywords}
       />
       {keyword && isClick && (
@@ -67,6 +66,8 @@ const KeywordList = ({ isClick, selectIndex, setIsClick, setSelectIndex }: Props
                     />
                   ))}
                 </>
+              ) : isLoading ? (
+                <CMNoticeLIne>검색 중...</CMNoticeLIne>
               ) : (
                 <CMNoticeLIne>검색어가 없습니다.</CMNoticeLIne>
               )}
