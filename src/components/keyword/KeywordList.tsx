@@ -1,25 +1,52 @@
 import { IKeyword } from 'src/types/keyword';
 import styled from 'styled-components';
 import CMContainer from 'src/components/common/CMContainer';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
 import { highlight } from 'src/utils/highlight';
-import { KeywordContext } from './KeywordMain';
 import { useDebounce } from 'src/hooks/useDebounce';
+import { addRecentKeyword } from 'src/api/localStorage';
 
 type Props = {
+  keyword: string;
+  selectIndex: number;
   keywords: IKeyword[];
   isClick: boolean;
   isLoading: boolean;
+  inputRef: React.RefObject<HTMLInputElement>;
+  setKeyword: React.Dispatch<React.SetStateAction<string>>;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
   handleSearch: (keyword: string) => Promise<void>;
 };
 
-const KeywordList = ({ keywords, isClick, isLoading, setIsClick, handleSearch }: Props) => {
-  const { keyword, selectIndex } = useContext(KeywordContext);
+const KeywordList = ({
+  keyword,
+  selectIndex,
+  keywords,
+  isClick,
+  isLoading,
+  inputRef,
+  setKeyword,
+  setIsClick,
+  setSelectIndex,
+  handleSearch,
+}: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
   const debounceKeyword = useDebounce(keyword);
+
+  const handleKeywordClick = (recent: string) => {
+    inputRef?.current?.blur();
+    setIsClick(false);
+    setSelectIndex(-1);
+    addRecentKeyword(recent);
+    setKeyword(recent);
+  };
+
+  useEffect(() => {
+    handleSearch(debounceKeyword);
+  }, [debounceKeyword]);
 
   return (
     <>
@@ -39,6 +66,7 @@ const KeywordList = ({ keywords, isClick, isLoading, setIsClick, handleSearch }:
                         __html: highlight(keywordItem.name, debounceKeyword),
                       }}
                       focus={selectIndex === idx + 1}
+                      onClick={() => handleKeywordClick(keywordItem.name)}
                     />
                   ))}
                 </>
@@ -51,7 +79,9 @@ const KeywordList = ({ keywords, isClick, isLoading, setIsClick, handleSearch }:
           </>
         </CMContainer>
       )}
-      {!keyword && isClick && <KeywordRecent setIsClick={setIsClick} selectIndex={selectIndex} />}
+      {!keyword && isClick && (
+        <KeywordRecent selectIndex={selectIndex} handleKeywordClick={handleKeywordClick} />
+      )}
     </>
   );
 };

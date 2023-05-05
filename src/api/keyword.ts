@@ -1,4 +1,3 @@
-import React from 'react';
 import { isExpired } from 'src/utils/isExpired';
 
 const BASE_URL = '/api/v1/search-conditions';

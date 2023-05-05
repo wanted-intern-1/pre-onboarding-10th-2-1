@@ -1,14 +1,13 @@
-import React from 'react';
 import CMContainer from '../common/CMContainer';
 import styled from 'styled-components';
 import { CSKeyword } from 'src/utils/const/keyword';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 
 const KeywordRecent = ({
-  setIsClick,
   selectIndex,
+  handleKeywordClick,
 }: {
-  setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  handleKeywordClick: (recent: string) => void;
   selectIndex: number;
 }) => {
   const recentDatas = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
@@ -20,7 +19,9 @@ const KeywordRecent = ({
           recentDatas.map((recent: string, idx: number) => {
             return (
               <S.SearchItem
-                onClick={() => setIsClick((prev) => !prev)}
+                onClick={() => {
+                  handleKeywordClick(recent);
+                }}
                 focus={selectIndex === idx + 1}
               >
                 {recent}

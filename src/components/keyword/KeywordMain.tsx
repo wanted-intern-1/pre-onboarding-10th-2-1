@@ -7,20 +7,6 @@ import { IKeyword } from 'src/types/keyword';
 import { handleSliceData } from 'src/utils/handleSliceData';
 import keywordApi from 'src/api/keyword';
 
-type IKeywordContext = {
-  keyword: string;
-  selectIndex: number;
-  setKeyword: React.Dispatch<React.SetStateAction<string>>;
-  setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
-};
-
-export const KeywordContext = React.createContext<IKeywordContext>({
-  keyword: '',
-  selectIndex: -1,
-  setKeyword: () => {},
-  setSelectIndex: () => {},
-});
-
 const KeywordMain = () => {
   const [keyword, setKeyword] = useState('');
   const [selectIndex, setSelectIndex] = useState(-1);
@@ -28,7 +14,8 @@ const KeywordMain = () => {
   const [isClick, setIsClick] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [keywords, setKeywords] = useState<IKeyword[]>([]);
-  const keywordRef = useRef<HTMLInputElement>(null);
+  const keywordRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = useCallback(
     async (keyword: string) => {
@@ -45,25 +32,33 @@ const KeywordMain = () => {
   });
 
   return (
-    <KeywordContext.Provider value={{ keyword, selectIndex, setSelectIndex, setKeyword }}>
-      <S.Container ref={keywordRef}>
-        <KeywordInput
-          keywords={keywords}
-          isClick={isClick}
-          isLoading={isLoading}
-          setIsClick={setIsClick}
-          setIsLoading={setIsLoading}
-          handleSearch={handleSearch}
-        />
-        <KeywordList
-          keywords={keywords}
-          isClick={isClick}
-          isLoading={isLoading}
-          setIsClick={setIsClick}
-          handleSearch={handleSearch}
-        />
-      </S.Container>
-    </KeywordContext.Provider>
+    <S.Container ref={keywordRef}>
+      <KeywordInput
+        keyword={keyword}
+        selectIndex={selectIndex}
+        keywords={keywords}
+        isClick={isClick}
+        isLoading={isLoading}
+        setKeyword={setKeyword}
+        setSelectIndex={setSelectIndex}
+        setIsClick={setIsClick}
+        setIsLoading={setIsLoading}
+        handleSearch={handleSearch}
+        ref={inputRef}
+      />
+      <KeywordList
+        keyword={keyword}
+        selectIndex={selectIndex}
+        keywords={keywords}
+        isClick={isClick}
+        isLoading={isLoading}
+        setKeyword={setKeyword}
+        setIsClick={setIsClick}
+        setSelectIndex={setSelectIndex}
+        handleSearch={handleSearch}
+        inputRef={inputRef}
+      />
+    </S.Container>
   );
 };
 
