@@ -168,26 +168,28 @@ const handleKeyPress = (e: React.KeyboardEvent) => {
 
 입력마다 API 호출하지 않도록 API **호출 횟수를 줄이는 전략** 수립
 
-### [debounce](https://github.com/wanted-intern-1/pre-onboarding-10th-2-1/blob/main/src/utils/debounce.ts)
+### [useDebounce](https://github.com/wanted-intern-1/pre-onboarding-10th-2-1/blob/main/src/hooks/useDebounce.ts)
 
 input의 `onChange`이벤트가 호출될때 사용자의 입력을 감지하고 300ms 이내에 추가 입력이 없다면 입력이 끝난것으로 판단, 입력이 끝났을때만 API호출 전략을 사용했습니다.
 
 ```typescript
-const debounce = (callback: React.Dispatch<React.SetStateAction<string>>) => {
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  const dispatchDebounce = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    const newTimer = setTimeout(() => {
-      callback(e.target.value);
-    }, 300);
-    timer = newTimer;
-  };
-  return dispatchDebounce;
-};
+import { useState, useEffect } from 'react';
 
-export default debounce;
+export function useDebounce(value: string) {
+  const [debouncedValue, setDebouncedValue] = useState<string>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, 200);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value]);
+
+  return debouncedValue;
+}
 ```
 
 ### 검색된 문자 강조
