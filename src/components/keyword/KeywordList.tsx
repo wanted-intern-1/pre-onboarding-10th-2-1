@@ -64,7 +64,7 @@ const KeywordList = ({
                   {keywords.map((keywordItem, idx) => (
                     <S.SearchItem
                       dangerouslySetInnerHTML={{
-                        __html: highlight(keywordItem.name, debounceKeyword),
+                        __html: highlight(keywordItem.name, keyword),
                       }}
                       focus={selectIndex === idx + 1}
                       onClick={() => handleKeywordClick(keywordItem.name)}

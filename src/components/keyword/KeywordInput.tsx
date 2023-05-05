@@ -1,3 +1,4 @@
+
 import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
@@ -124,7 +125,7 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
             <NoticeWrap>
               <S.SearchInputIcon />
               <S.Notice>질환명을 입력해 주세요</S.Notice>
-            </NoticeWrap>
+            </S.NoticeWrap>
           )}
           <S.SearchInputWrap>
             <S.SearchInput
@@ -144,17 +145,6 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
   }
 );
 
-const NoticeWrap = styled.div<{ isClick?: boolean }>`
-  top: 50%;
-  position: absolute;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  color: #a7afb7;
-  pointer-events: none;
-  font-weight: 700;
-`;
-
 const S = {
   Box: styled.div<{ isClick?: boolean }>`
     display: flex;
@@ -163,7 +153,6 @@ const S = {
     border-radius: 42px;
     border: 2px solid #fff;
     background-color: #fff;
-    width: 100%;
     border-color: ${({ isClick }) => (isClick ? 'rgb(25, 118, 210)' : '#fff')};
     position: relative;
   `,
@@ -191,6 +180,16 @@ const S = {
     }
     width: 25px;
     height: 25px;
+  `,
+  NoticeWrap: styled.div<{ isClick?: boolean }>`
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    color: #a7afb7;
+    pointer-events: none;
+    font-weight: 700;
   `,
   Notice: styled.div`
     margin-left: 10px;

@@ -7,14 +7,14 @@ const CMContainer = ({ children }: { children: ReactNode }) => {
 
 const Container = styled.div`
   background-color: #fff;
-  width: 520px;
-  position: absolute;
+  width: 490px;
   top: 80px;
   left: 10px;
   max-height: 320px;
   overflow: hidden;
   border-radius: 15px;
   padding: 10px 0px;
+  margin-top: 8px;
 `;
 
 export default CMContainer;

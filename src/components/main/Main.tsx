@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import KeywordMain from '../keyword/KeywordMain';
+import { Background } from './Background';
 
 const Main = () => {
   return (
     <S.Container>
+      <Background />
       <S.Wrap>
         <S.Title>
           국내 모든 임상시험 검색하고
@@ -24,6 +26,9 @@ const S = {
     width: 100%;
     height: 100%;
     background-color: #cae9ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   `,
   Wrap: styled.div`
     max-width: 1000px;
