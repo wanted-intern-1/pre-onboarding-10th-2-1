@@ -1,66 +1,139 @@
-import React, { useRef, useState } from 'react';
+
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
 import { CSKeyword } from 'src/utils/const/keyword';
 import { keyboards } from 'src/utils/const/keyboard';
-import KeywordList from './KeywordList';
-import debounce from 'src/utils/debounce';
+import { IKeyword } from 'src/types/keyword';
+import useForwardRef from 'src/hooks/useForwardRef';
+import { addRecentKeyword, getRecentKeywords } from 'src/api/localStorage';
 
 type Props = {
+  keyword: string;
+  selectIndex: number;
   isClick: boolean;
+  keywords: IKeyword[];
+  isLoading: boolean;
+  setKeyword: React.Dispatch<React.SetStateAction<string>>;
+  setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSearch: (keyword: string) => Promise<void>;
 };
 
-const KeywordInput = ({ isClick, setIsClick }: Props) => {
-  const onCancleBtn = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (inputRef.current) inputRef.current.value = '';
-  };
+const KeywordInput = forwardRef<HTMLInputElement, Props>(
+  (
+    {
+      keyword,
+      selectIndex,
+      isClick,
+      keywords,
+      setKeyword,
+      setSelectIndex,
+      setIsLoading,
+      setIsClick,
+      handleSearch,
+    },
+    ref
+  ) => {
+    const onCancleBtn = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setKeyword('');
+      setSelectIndex(-1);
+    };
 
-  const [keyword, setKeyword] = useState('');
-  const [selectIndex, setSelectIndex] = useState(-1);
-  const inputRef = useRef<HTMLInputElement>(null);
+    const handleSearchKeyword = () => {
+      handleEnterPress(keyword, getRecentKeywords());
+    };
 
-  const handleSearchKeyword = () => {
-    if (keyword) localStorage.setItem(CSKeyword.RECENT_KEY, keyword);
-  };
+    const refLocal = useForwardRef<HTMLInputElement>(ref);
 
-  const debounceValue = debounce(setKeyword);
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === keyboards.ESCAPE) {
-      if (inputRef.current) inputRef.current.value = '';
-    }
-    if (e.key === keyboards.ENTER) {
+    const handleEnterPress = (keyword: string, recents: string[]) => {
+      refLocal.current.blur();
+      setIsClick(false);
+      setSelectIndex(-1);
+      let recent;
       if (keyword) {
-        const recents = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
-        const jsonRecents = JSON.stringify([...recents, keyword]);
-        localStorage.setItem(CSKeyword.RECENT_KEY, jsonRecents);
+        handleSearch(keyword);
+        recent = selectIndex === -1 || selectIndex === 0 ? keyword : keywords[selectIndex - 1].name;
+      } else {
+        if (selectIndex === -1) return;
+        recent = recents[selectIndex - 1];
       }
-    }
-    if (e.key === keyboards.DOWN) {
-      if (CSKeyword.MAX_LEN === selectIndex + 1) return;
-      setSelectIndex((prev) => prev + 1);
-    }
-    if (e.key === keyboards.UP) {
-      if (selectIndex === 0) return;
-      setSelectIndex((prev) => prev - 1);
-    }
-  };
+      addRecentKeyword(recent);
+      setKeyword(recent);
+    };
 
-  return (
-    <>
+    const moveRecentUp = (recents: string[]) => {
+      setSelectIndex((prev) => (prev <= 1 ? recents.length : prev - 1));
+    };
+
+    const moveKeywordUp = (keywords: IKeyword[]) => {
+      setSelectIndex((prev) => (prev <= 0 ? keywords.length : prev - 1));
+    };
+
+    const moveRecentDown = (recents: string[]) => {
+      setSelectIndex((prev) => (selectIndex === -1 ? 1 : prev >= recents.length ? 1 : prev + 1));
+    };
+
+    const moveKeywordDown = (keywords: IKeyword[]) => {
+      setSelectIndex((prev) => (prev >= keywords.length - 1 ? 0 : prev + 1));
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+      if (e.nativeEvent.isComposing) return;
+      const recents = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
+      const moveUp = keyword ? moveKeywordUp : moveRecentUp;
+      const moveDown = keyword ? moveKeywordDown : moveRecentDown;
+
+      switch (e.key) {
+        case keyboards.ESCAPE:
+          setKeyword('');
+          break;
+        case keyboards.ENTER:
+          handleEnterPress(keyword, recents);
+          break;
+        case keyboards.DOWN:
+          e.preventDefault();
+          moveDown(keyword ? keywords : recents);
+          break;
+        case keyboards.UP:
+          e.preventDefault();
+          moveUp(keyword ? keywords : recents);
+          break;
+        default:
+          break;
+      }
+    };
+
+    const handleInputClick = () => {
+      setIsClick(true);
+      setSelectIndex(-1);
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setKeyword(e.target.value);
+      setIsLoading(true);
+      setSelectIndex(-1);
+    };
+
+    return (
       <S.Box isClick={isClick}>
-        <S.Line onClick={() => setIsClick(true)}>
-          {!isClick && inputRef.current && !inputRef.current.value && (
-            <S.NoticeWrap>
+        <S.Line onClick={handleInputClick}>
+          {!isClick && !keyword && (
+            <NoticeWrap>
               <S.SearchInputIcon />
               <S.Notice>질환명을 입력해 주세요</S.Notice>
             </S.NoticeWrap>
           )}
           <S.SearchInputWrap>
-            <S.SearchInput ref={inputRef} onKeyDown={handleKeyPress} onChange={debounceValue} />
+            <S.SearchInput
+              onKeyDown={handleKeyPress}
+              value={keyword}
+              onChange={handleChange}
+              ref={refLocal}
+            />
             {isClick && <S.SearchInputCancleIcon onClick={onCancleBtn} color="#A7AFB7" />}
           </S.SearchInputWrap>
         </S.Line>
@@ -68,18 +141,9 @@ const KeywordInput = ({ isClick, setIsClick }: Props) => {
           <S.SearchIcon color="#fff" />
         </S.SubmItBtn>
       </S.Box>
-      {inputRef.current && (
-        <KeywordList
-          setSelectIndex={setSelectIndex}
-          selectIndex={selectIndex}
-          keyword={inputRef.current.value}
-          isClick={isClick}
-          setIsClick={setIsClick}
-        />
-      )}
-    </>
-  );
-};
+    );
+  }
+);
 
 const S = {
   Box: styled.div<{ isClick?: boolean }>`
