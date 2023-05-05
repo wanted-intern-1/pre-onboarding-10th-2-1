@@ -34,7 +34,6 @@ const KeywordList = ({
   handleSearch,
 }: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
-  // TODO: debounce 수정
   const debounceKeyword = useDebounce(keyword);
 
   const handleKeywordClick = (recent: string) => {
