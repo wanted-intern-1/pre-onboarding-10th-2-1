@@ -41,7 +41,7 @@ const KeywordList = ({ isClick, setIsClick, keyword, selectIndex, setSelectIndex
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
                   {keywordInfo.map((keywordItem, idx) => (
-                    <S.SearchItem focus={selectIndex === idx}>{keywordItem.name}</S.SearchItem>
+                    <S.SearchItem key={keywordItem.id} focus={selectIndex === idx}>{keywordItem.name}</S.SearchItem>
                   ))}
                 </>
               ) : (

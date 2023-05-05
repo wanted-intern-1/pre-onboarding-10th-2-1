@@ -16,7 +16,6 @@ type Props = {
 const KeywordInput = ({ isClick, setIsClick }: Props) => {
   const onCancleBtn = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setKeyword('');
     if (inputRef.current) inputRef.current.value = '';
   };
 
@@ -32,7 +31,6 @@ const KeywordInput = ({ isClick, setIsClick }: Props) => {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === keyboards.ESCAPE) {
-      setKeyword('');
       if (inputRef.current) inputRef.current.value = '';
     }
     if (e.key === keyboards.ENTER) {
@@ -64,20 +62,23 @@ const KeywordInput = ({ isClick, setIsClick }: Props) => {
           )}
           <S.SearchInputWrap>
             <S.SearchInput ref={inputRef} onKeyDown={handleKeyPress} onChange={debounceValue} />
-            <S.SearchInputCancleIcon isClick={isClick} onClick={onCancleBtn} color="#A7AFB7" />
+            {isClick && <S.SearchInputCancleIcon onClick={onCancleBtn} color="#A7AFB7" />}
           </S.SearchInputWrap>
         </S.Line>
         <S.SubmItBtn onClick={handleSearchKeyword}>
           <S.SearchIcon color="#fff" />
         </S.SubmItBtn>
       </S.Box>
-      <KeywordList
-        setSelectIndex={setSelectIndex}
-        selectIndex={selectIndex}
-        keyword={keyword}
-        isClick={isClick}
-        setIsClick={setIsClick}
-      />
+      {
+        inputRef.current &&
+        <KeywordList
+          setSelectIndex={setSelectIndex}
+          selectIndex={selectIndex}
+          keyword={inputRef.current.value}
+          isClick={isClick}
+          setIsClick={setIsClick}
+        />
+      }
     </>
   );
 };
@@ -133,8 +134,7 @@ const S = {
   Notice: styled.div`
     margin-left: 10px;
   `,
-  SearchInputCancleIcon: styled(MdCancel)<{ isClick: boolean }>`
-    display: ${({ isClick }) => (isClick ? 'block' : 'none')};
+  SearchInputCancleIcon: styled(MdCancel)`
     width: 25px;
     height: 25px;
     cursor: pointer;
