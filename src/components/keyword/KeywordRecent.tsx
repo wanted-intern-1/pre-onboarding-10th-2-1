@@ -6,8 +6,10 @@ import CMNoticeLIne from '../common/CMNoticeLIne';
 
 const KeywordRecent = ({
   setIsClick,
+  selectIndex,
 }: {
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  selectIndex: number;
 }) => {
   const recentDatas = JSON.parse(localStorage.getItem(CSKeyword.RECENT_KEY) || '[]');
   return (
@@ -15,9 +17,14 @@ const KeywordRecent = ({
       <S.SearchWrap>
         <CMNoticeLIne>최근 검색어</CMNoticeLIne>
         {recentDatas.length > 0 ? (
-          recentDatas.map((recent: string) => {
+          recentDatas.map((recent: string, idx: number) => {
             return (
-              <S.SearchItem onClick={() => setIsClick((prev) => !prev)}>{recent}</S.SearchItem>
+              <S.SearchItem
+                onClick={() => setIsClick((prev) => !prev)}
+                focus={selectIndex === idx + 1}
+              >
+                {recent}
+              </S.SearchItem>
             );
           })
         ) : (
@@ -30,13 +37,14 @@ const KeywordRecent = ({
 
 const S = {
   SearchWrap: styled.ul``,
-  SearchItem: styled.li`
+  SearchItem: styled.li<{ focus: boolean }>`
     padding: 10px 20px;
     font-weight: bold;
     cursor: pointer;
     &:hover {
       background-color: rgba(0, 0, 0, 0.1);
     }
+    background-color: ${({ focus }) => (focus ? 'rgba(0,0,0,0.1)' : '#fff')};
   `,
 };
 

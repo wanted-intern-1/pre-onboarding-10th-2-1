@@ -11,15 +11,15 @@ import { handleSliceData } from 'src/utils/handleSliceData';
 
 type Props = {
   isClick: boolean;
+  selectIndex: number;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const KeywordList = ({ isClick, setIsClick }: Props) => {
+const KeywordList = ({ isClick, selectIndex, setIsClick, setSelectIndex }: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
-  const [selectIndex, setSelectIndex] = useState<number>(-1);
-
   const [keyword, setKeyword] = useState('');
-  const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>();
+  const [keywordInfo, setkeywordInfo] = useState<Array<IKeyword>>([]);
 
   const debounceKeyword = useDebounce(keyword);
 
@@ -38,25 +38,27 @@ const KeywordList = ({ isClick, setIsClick }: Props) => {
   return (
     <>
       <KeywordInput
-        index={selectIndex}
-        setIndex={setSelectIndex}
         keyword={keyword}
         setKeyword={setKeyword}
+        selectIndex={selectIndex}
+        keywords={keywordInfo}
         isClick={isClick}
         setIsClick={setIsClick}
+        setSelectIndex={setSelectIndex}
         refetch={handleSearchKeywords}
-        keywordsLength={keywordInfo?.length}
       />
-      {keyword && keywordInfo && isClick && (
+      {keyword && isClick && (
         <CMContainer>
           <>
-            <S.KeywordLine>{keyword}</S.KeywordLine>
             <S.SearchWrap ref={autoRef}>
+              <S.SearchItem focus={selectIndex === 0} onClick={() => {}}>
+                {keyword}
+              </S.SearchItem>
               {keywordInfo.length > 0 ? (
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
                   {keywordInfo.map((keywordItem, idx) => (
-                    <S.SearchItem focus={selectIndex === idx}>{keywordItem.name}</S.SearchItem>
+                    <S.SearchItem focus={selectIndex === idx + 1}>{keywordItem.name}</S.SearchItem>
                   ))}
                 </>
               ) : (
@@ -66,7 +68,7 @@ const KeywordList = ({ isClick, setIsClick }: Props) => {
           </>
         </CMContainer>
       )}
-      {!keyword && isClick && <KeywordRecent setIsClick={setIsClick} />}
+      {!keyword && isClick && <KeywordRecent setIsClick={setIsClick} selectIndex={selectIndex} />}
     </>
   );
 };
@@ -81,14 +83,6 @@ const S = {
       background-color: rgba(0, 0, 0, 0.1);
     }
     background-color: ${({ focus }) => (focus ? 'rgba(0,0,0,0.1)' : '#fff')};
-  `,
-  KeywordLine: styled.div`
-    margin-top: 10px;
-    padding: 10px 20px;
-    cursor: pointer;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
   `,
 };
 
