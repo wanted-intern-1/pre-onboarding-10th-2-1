@@ -6,6 +6,7 @@ import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
 import keywordApi from 'src/api/keyword';
 import { handleSliceData } from 'src/utils/handleSliceData';
+import { highlight } from 'src/utils/highlight';
 
 type Props = {
   isClick: boolean;
@@ -41,7 +42,12 @@ const KeywordList = ({ isClick, setIsClick, keyword, selectIndex, setSelectIndex
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
                   {keywordInfo.map((keywordItem, idx) => (
-                    <S.SearchItem key={keywordItem.id} focus={selectIndex === idx}>{keywordItem.name}</S.SearchItem>
+                    <S.SearchItem
+                      dangerouslySetInnerHTML={{
+                        __html: highlight(keywordItem.name, debounceKeyword),
+                      }}
+                      focus={selectIndex === idx}
+                    />
                   ))}
                 </>
               ) : (
@@ -60,12 +66,18 @@ const S = {
   SearchWrap: styled.ul``,
   SearchItem: styled.li<{ focus: boolean }>`
     padding: 10px 20px;
-    font-weight: bold;
     cursor: pointer;
     &:hover {
       background-color: rgba(0, 0, 0, 0.1);
     }
     background-color: ${({ focus }) => (focus ? 'rgba(0,0,0,0.1)' : '#fff')};
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    strong {
+      font-weight: bold;
+    }
   `,
   KeywordLine: styled.div`
     margin-top: 10px;
