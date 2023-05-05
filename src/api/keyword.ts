@@ -24,7 +24,7 @@ const fetchData = async (keyword: string) => {
   const cache = await caches.open('keywords');
 
   if (await needFetch(keyword)) {
-    console.info("calling api");
+    console.info('calling api');
     await cache.add(url);
   }
 

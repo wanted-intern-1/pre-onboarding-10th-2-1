@@ -1,4 +1,4 @@
-import React, { forwardRef,useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
