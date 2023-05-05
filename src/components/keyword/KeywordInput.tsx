@@ -115,7 +115,6 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
       setKeyword(e.target.value);
       setIsLoading(true);
       setSelectIndex(-1);
-      handleSearch(keyword);
     };
 
     return (
