@@ -55,7 +55,6 @@ const KeywordMain = () => {
         setKeyword={setKeyword}
         setIsClick={setIsClick}
         setSelectIndex={setSelectIndex}
-        handleSearch={handleSearch}
         inputRef={inputRef}
       />
     </S.Container>

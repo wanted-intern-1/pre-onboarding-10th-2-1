@@ -1,11 +1,10 @@
 import { IKeyword } from 'src/types/keyword';
 import styled from 'styled-components';
 import CMContainer from 'src/components/common/CMContainer';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import CMNoticeLIne from '../common/CMNoticeLIne';
 import KeywordRecent from './KeywordRecent';
 import { highlight } from 'src/utils/highlight';
-import { useDebounce } from 'src/hooks/useDebounce';
 import { addRecentKeyword } from 'src/api/localStorage';
 
 type Props = {
@@ -18,7 +17,6 @@ type Props = {
   setKeyword: React.Dispatch<React.SetStateAction<string>>;
   setIsClick: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectIndex: React.Dispatch<React.SetStateAction<number>>;
-  handleSearch: (keyword: string) => Promise<void>;
 };
 
 const KeywordList = ({
@@ -31,10 +29,8 @@ const KeywordList = ({
   setKeyword,
   setIsClick,
   setSelectIndex,
-  handleSearch,
 }: Props) => {
   const autoRef = useRef<HTMLUListElement>(null);
-  const debounceKeyword = useDebounce(keyword);
 
   const handleKeywordClick = (recent: string) => {
     inputRef?.current?.blur();
@@ -43,10 +39,6 @@ const KeywordList = ({
     addRecentKeyword(recent);
     setKeyword(recent);
   };
-
-  useEffect(() => {
-    handleSearch(debounceKeyword);
-  }, [debounceKeyword]);
 
   return (
     <>
@@ -61,7 +53,7 @@ const KeywordList = ({
                 <>
                   <CMNoticeLIne>추천 검색어</CMNoticeLIne>
                   {keywords.map((keywordItem, idx) => (
-                    <S.SearchItem
+                    <S.SearchItem key={keywordItem.id}
                       dangerouslySetInnerHTML={{
                         __html: highlight(keywordItem.name, keyword),
                       }}

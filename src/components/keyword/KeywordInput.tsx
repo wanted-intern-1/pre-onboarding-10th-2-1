@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef,useEffect } from 'react';
 import styled from 'styled-components';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
@@ -7,6 +7,7 @@ import { keyboards } from 'src/utils/const/keyboard';
 import { IKeyword } from 'src/types/keyword';
 import useForwardRef from 'src/hooks/useForwardRef';
 import { addRecentKeyword, getRecentKeywords } from 'src/api/localStorage';
+import { useDebounce } from 'src/hooks/useDebounce';
 
 type Props = {
   keyword: string;
@@ -116,6 +117,12 @@ const KeywordInput = forwardRef<HTMLInputElement, Props>(
       setIsLoading(true);
       setSelectIndex(-1);
     };
+
+    const debounceKeyword = useDebounce(keyword);
+
+    useEffect(() => {
+      handleSearch(debounceKeyword);
+    }, [debounceKeyword]);
 
     return (
       <S.Box isClick={isClick}>
